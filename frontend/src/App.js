@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 var count = 0;
+let events;
 
 function App() {
   const [ facts, setFacts ] = useState([]);
@@ -11,14 +12,13 @@ function App() {
     console.log(++count);
     console.log(listening);
     if (!listening) {
-      const events = new EventSource('http://localhost:3000/events');
+      if (!events) {events = new EventSource('http://localhost:3000/events');}
 
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
-        console.log(parsedData);
+        console.log({parsedData});
 
-        setFacts(facts.concat(parsedData));
-        console.log(facts);
+        setFacts(facts.concat(parsedData.facts));
       };
 
       setListening(true);

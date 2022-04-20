@@ -27,12 +27,11 @@ function eventsHandler(request, response, next) {
   };
   response.writeHead(200, headers);
   
+  const clientId = Date.now();
 
-  const data = `facts: ${JSON.stringify(facts, null, 2)}\n\n`;
+  const data = `data: ${JSON.stringify({clientId, facts})}\n\n`;
 
   response.write(data);
-
-  const clientId = Date.now();
 
   const newClient = {
     id: clientId,
@@ -51,7 +50,7 @@ app.get('/events', eventsHandler);
 
 function emitEventToAllClients() {
   clients.forEach((client) => {
-    client.response.write(`facts: ${JSON.stringify(facts, null, 2)}\n\n`);
+    client.response.write(`data: ${JSON.stringify({clientId: client.id, facts})}\n\n`);
   })
 }
 
